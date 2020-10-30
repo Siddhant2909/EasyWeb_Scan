@@ -97,10 +97,10 @@ def subdomain_takeover(url1):
         targetresponse = response.text
         for err in errors:
             if err in targetresponse:
-                print("[+]"+target+":"+"Vulnerable")
+                print("[+]"+target+":"+"Vulnerable"+"----"+str(response.status_code))
                 break
             else:
-                print("[+]"+target+":"+"Not Vulnerable")
+                print("[+]"+target+":"+"Not Vulnerable"+"----"+str(response.status_code))
                 break       
     readfile.close()            
 
