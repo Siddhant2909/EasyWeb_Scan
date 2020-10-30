@@ -119,8 +119,8 @@ def clickjacking(url1):
     if '/' in url1:
         url1 = url1.split('/',1)[0]
     os.system("curl {} -I  > {}.txt ".format(url,url1))
-    dic=jsonconvert(url1)
-    if('x-Frame-Options' in dic.keys() or 'Content-Security-Policy' in dic.keys()):
+    list=jsonconvert(url1)
+    if('x-Frame-Options' in list.keys() or 'Content-Security-Policy' in list.keys()):
         print("[+] The website is not vulnerable to clickjacking")
     else:
         print("[+] The website is vulnerable to clickjacking")
@@ -131,15 +131,15 @@ def cors():
     def cors(url,url1,origin):
         url1 = url1.split('.')[0]
         os.system("curl {} -I -H origin:{} > {}.txt ".format(url,origin,url1))
-        dic=jsonconvert(url1)
-        status_code=int(dic.get('HTTP/1.1')[0])
+        list=jsonconvert(url1)
+        status_code=int(list.get('HTTP/1.1')[0])
         if status_code>=200 and status_code<300:
-            if ('Access-Control-Allow-Origin:' in dic.keys() and 'Access-Control-Allow-Credentials:' in dic.keys()):
-                if (dic.get('Access-Control-Allow-Origin:')[0] == origin and dic.get('Access-Control-Allow-Credentials:')[0] == 'true'):
+            if ('Access-Control-Allow-Origin:' in list.keys() and 'Access-Control-Allow-Credentials:' in list.keys()):
+                if (list.get('Access-Control-Allow-Origin:')[0] == origin and list.get('Access-Control-Allow-Credentials:')[0] == 'true'):
                     print('[+] Case 1 Possible.The entered domain is subject to exploitation.')
-                elif (dic.get('Access-Control-Allow-Origin:')[0] == 'null' and dic.get('Access-Control-Allow-Credentials:')[0] == 'true'):
+                elif (list.get('Access-Control-Allow-Origin:')[0] == 'null' and list.get('Access-Control-Allow-Credentials:')[0] == 'true'):
                     print('[+] Case 2 Possible.The entered url might be subject to misconfigured CORS exploitation')
-                elif (dic.get('Access-Control-Allow-Origin:')[0] == '*' and dic.get('Access-Control-Allow-Credentials:')[0] == 'true'):
+                elif (list.get('Access-Control-Allow-Origin:')[0] == '*' and list.get('Access-Control-Allow-Credentials:')[0] == 'true'):
                     print('[+]Case 3 Possible.The entered url is not subject to misconfigured CORS exploitation')
                 else:
                     print('[+] The entered url is not subject is not subject to misconfigured CORS exploitation')
@@ -153,21 +153,21 @@ def cors():
 
 
 def jsonconvert(url1):
-    dict1={}
+    listt1={}
     with open("{}.txt".format(url1)) as f:
         for line in f:
             if line.strip():  # non-empty line?
                 key, value = line.split(None, 1)  # None means 'all whitespace', the default
-                if 'Link:' in dict1.keys() and key == 'Link:':
+                if 'Link:' in listt1.keys() and key == 'Link:':
                     key = 'Link1:'
-                dict1[key] = value.split()
+                listt1[key] = value.split()
     out = open("{}_response.json".format(url1), "w") 
-    json.dump(dict1, out, indent = 4, sort_keys = False) 
+    json.dump(listt1, out, indent = 4, sort_keys = False) 
     out.close()
     f= open('{}_response.json'.format(url1))
-    dic = json.load(f)
+    list = json.load(f)
     f.close()
-    return dic
+    return list
 
 print("To check whether website is live: 1")
 print("To check for subdomains and subomain takeover: 2")
