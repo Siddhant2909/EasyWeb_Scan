@@ -156,8 +156,8 @@ def jsonconvert(url1):
     listt1={}
     with open("{}.txt".format(url1)) as f:
         for line in f:
-            if line.strip():  # non-empty line?
-                key, value = line.split(None, 1)  # None means 'all whitespace', the default
+            if line.strip():  
+                key, value = line.split(None, 1)  
                 if 'Link:' in listt1.keys() and key == 'Link:':
                     key = 'Link1:'
                 listt1[key] = value.split()
